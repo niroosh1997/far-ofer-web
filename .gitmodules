@@ -1,0 +1,3 @@
+[submodule "far-ofer-web-client"]
+	path = far-ofer-web-client
+	url = https://github.com/niroosh1997/far-ofer-web-client.git
