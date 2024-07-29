@@ -1,0 +1,47 @@
+services:
+  client:
+    image: client:1.0.0
+    privileged: true
+    network_mode: "host"
+    command: npm start
+    restart: always
+    build:
+      context: ./webrtc-docker
+      dockerfile: client.Dockerfile
+
+  signalserver:
+    image: web-rtc-general:1.0.0
+    privileged: true
+    network_mode: "host"
+    command: cargo run --bin gst-webrtc-signalling-server
+    restart: always
+  left:
+    image: web-rtc-general:1.0.0
+    command: gst-launch-1.0 webrtcsink name=ws meta="meta,name=LeftProducer" rtspsrc location=rtsp://192.168.168.122:8554/Left tcp-timeout=3000000 timeout=3000000 retry=1 latency=0 ! watchdog timeout=3000 ! application/x-rtp ! rtph265depay ! avdec_h265 ! videoconvert ! ws.
+    privileged: true
+    network_mode: "host"
+    restart: always
+  right:
+    image: web-rtc-general:1.0.0
+    command: gst-launch-1.0 webrtcsink name=ws meta="meta,name=RightProducer" rtspsrc location=rtsp://192.168.168.122:8554/Right tcp-timeout=3000000 timeout=3000000 retry=1 latency=0 ! watchdog timeout=3000 ! application/x-rtp ! rtph265depay ! avdec_h265 ! videoconvert ! ws.
+    privileged: true
+    network_mode: "host"
+    restart: always
+  front:
+    image: web-rtc-general:1.0.0
+    command: gst-launch-1.0 webrtcsink name=ws meta="meta,name=FrontProducer" rtspsrc location=rtsp://192.168.168.122:8554/Front tcp-timeout=3000000 timeout=3000000 retry=1 latency=0 ! watchdog timeout=3000 ! application/x-rtp ! rtph265depay ! avdec_h265 ! videoconvert ! ws.
+    privileged: true
+    network_mode: "host"
+    restart: always
+  rear:
+    image: web-rtc-general:1.0.0
+    command: gst-launch-1.0 webrtcsink name=ws meta="meta,name=BackProducer" rtspsrc location=rtsp://192.168.168.122:8554/Rear tcp-timeout=3000000 timeout=3000000 retry=1 latency=0 ! watchdog timeout=3000 ! application/x-rtp ! rtph265depay ! avdec_h265 ! videoconvert ! ws.
+    privileged: true
+    network_mode: "host"
+    restart: always
+  
+  web-rtc-docker:
+    image: web-rtc-general:1.0.0
+    build:
+      context: ./webrtc-docker
+      dockerfile: server.Dockerfile
