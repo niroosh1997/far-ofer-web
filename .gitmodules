@@ -4,3 +4,6 @@
 [submodule "far-ofer-web-server"]
 	path = far-ofer-web-server
 	url = https://github.com/niroosh1997/far-ofer-web-server.git
+[submodule "webrtc-docker"]
+	path = webrtc-docker
+	url = https://github.com/niroosh1997/webrtc-docker.git
