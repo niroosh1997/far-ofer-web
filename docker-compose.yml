@@ -1,6 +1,6 @@
 services:
-  client:
-    image: client:1.0.0
+  camera-client:
+    image: camera-client:1.0.0
     privileged: true
     network_mode: "host"
     command: npm start
@@ -45,3 +45,11 @@ services:
     build:
       context: ./webrtc-docker
       dockerfile: server.Dockerfile
+
+  ros-server:
+    image: ros_server:1.0.0
+    command: ros2 launch rosbridge_server rosbridge_websocket_launch.xml
+    network_mode: "host"
+    build:
+      context: ./far-ofer-web-server
+      dockerfile: Dockerfile
